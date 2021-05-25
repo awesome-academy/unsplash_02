@@ -1,5 +1,5 @@
 package com.sun.unsplash_02.utils
 
-object Constant {
-    const val BASE_URL = ""
+object Constants {
+    private const val BASE_URL = ""
 }
