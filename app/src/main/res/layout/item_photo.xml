@@ -14,6 +14,7 @@
             android:id="@+id/imageUnsplash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitXY"
+            android:minHeight="@dimen/dp_150" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

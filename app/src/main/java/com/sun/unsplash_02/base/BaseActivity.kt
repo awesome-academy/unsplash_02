@@ -30,7 +30,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun showProgressDialog() {
         progressDialog?.let {
-            if (!it.isShowing) it.dismiss()
+            if (!it.isShowing) it.show()
         }
     }
 

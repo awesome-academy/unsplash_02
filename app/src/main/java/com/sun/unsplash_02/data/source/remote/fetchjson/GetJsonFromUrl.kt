@@ -2,7 +2,6 @@ package com.sun.unsplash_02.data.source.remote.fetchjson
 
 import android.os.AsyncTask
 import com.sun.unsplash_02.data.source.remote.OnFetchDataJsonListener
-import org.json.JSONObject
 
 class GetJsonFromUrl<T> constructor(
     private val listener: OnFetchDataJsonListener<T>,

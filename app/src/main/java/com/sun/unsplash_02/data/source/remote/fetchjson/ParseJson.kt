@@ -8,7 +8,7 @@ object ParseJson {
 
     private fun urlsImageParseJson(jsonObject: JSONObject): ImageUrls = ImageUrls(
         jsonObject.getString(ImageUrlsEntry.REGULAR),
-        jsonObject.getString(ImageUrlsEntry.THUMB)
+        jsonObject.getString(ImageUrlsEntry.SMALL)
     )
 
     fun imageParseJson(jsonObject: JSONObject): Image {

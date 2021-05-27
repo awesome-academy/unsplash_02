@@ -9,7 +9,15 @@ interface ImageDataSource {
     interface Local
 
     interface Remote {
+
         fun getListCollections(listener: OnFetchDataJsonListener<MutableList<Collection>>)
-        fun getListImages(listener: OnFetchDataJsonListener<MutableList<Image>>, page: Int)
+
+        fun getListImages(listener: OnFetchDataJsonListener<MutableList<Image?>>, page: Int)
+
+        fun getListImageByCollectionId(
+            listener: OnFetchDataJsonListener<MutableList<Image?>>,
+            collectionId: String,
+            page: Int
+        )
     }
 }

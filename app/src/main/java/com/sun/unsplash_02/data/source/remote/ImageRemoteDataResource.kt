@@ -17,11 +17,25 @@ class ImageRemoteDataResource : ImageDataSource.Remote {
         ).execute(Constants.URL_COLLECTIONS)
     }
 
-    override fun getListImages(listener: OnFetchDataJsonListener<MutableList<Image>>, page: Int) {
+    override fun getListImages(listener: OnFetchDataJsonListener<MutableList<Image?>>, page: Int) {
         GetJsonFromUrl(
             listener = listener,
             keyEntity = ImageEntry.IMAGE
         ).execute("${Constants.URL_PHOTOS}$page")
+    }
+
+    override fun getListImageByCollectionId(
+        listener: OnFetchDataJsonListener<MutableList<Image?>>,
+        collectionId: String,
+        page: Int
+    ) {
+        GetJsonFromUrl(
+            listener = listener,
+            keyEntity = ImageEntry.IMAGE
+        ).execute(
+            "${Constants.URL_COLLECTION_PHOTO}$collectionId" +
+                    "${Constants.PHOTOS}${Constants.API_KEY}${Constants.PAGE}$page"
+        )
     }
 
     companion object {

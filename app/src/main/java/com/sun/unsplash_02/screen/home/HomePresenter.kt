@@ -9,6 +9,7 @@ class HomePresenter constructor(private val imageRepository: ImageRepository) :
     HomeContract.Presenter {
 
     private var view: HomeContract.View? = null
+    private var currentPage = 0
 
     override fun loadListCollections() =
         imageRepository.getCollections(object : OnFetchDataJsonListener<MutableList<Collection>> {
@@ -23,18 +24,37 @@ class HomePresenter constructor(private val imageRepository: ImageRepository) :
             }
         })
 
-    override fun loadListImages(page: Int) =
-        imageRepository.getImages(object : OnFetchDataJsonListener<MutableList<Image>> {
-            override fun onSuccess(data: MutableList<Image>) {
+    override fun loadListImages() =
+        imageRepository.getImages(object : OnFetchDataJsonListener<MutableList<Image?>> {
+            override fun onSuccess(data: MutableList<Image?>) {
+                view?.onImageLoaded(data)
             }
 
             override fun onError(exception: Exception?) {
+                view?.onError(exception)
             }
-        }, page)
+        }, currentPage++)
+
+    override fun loadListImagesByCollection(collectionId: String) {
+        imageRepository.getImagesByCollection(object :
+            OnFetchDataJsonListener<MutableList<Image?>> {
+            override fun onSuccess(data: MutableList<Image?>) {
+                view?.hideLoading()
+                view?.onImageLoaded(data)
+            }
+
+            override fun onError(exception: Exception?) {
+                view?.hideLoading()
+                view?.onError(exception)
+            }
+
+        }, collectionId, currentPage++)
+    }
 
     override fun onStart() {
         view?.showLoading()
         loadListCollections()
+        loadListImages()
     }
 
     override fun onStop() {
@@ -43,5 +63,9 @@ class HomePresenter constructor(private val imageRepository: ImageRepository) :
 
     override fun setView(view: HomeContract.View?) {
         this.view = view
+    }
+
+    fun resetCurrentPage() {
+        currentPage = 0
     }
 }

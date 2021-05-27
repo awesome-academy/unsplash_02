@@ -10,8 +10,16 @@ class ImageRepository private constructor(private val remote: ImageDataSource.Re
     fun getCollections(listener: OnFetchDataJsonListener<MutableList<Collection>>) =
         remote.getListCollections(listener)
 
-    fun getImages(listener: OnFetchDataJsonListener<MutableList<Image>>, page: Int) =
+    fun getImages(listener: OnFetchDataJsonListener<MutableList<Image?>>, page: Int) =
         remote.getListImages(listener, page)
+
+    fun getImagesByCollection(
+        listener: OnFetchDataJsonListener<MutableList<Image?>>,
+        collectionId: String,
+        page: Int
+    ) {
+        remote.getListImageByCollectionId(listener, collectionId, page)
+    }
 
     companion object {
         @Volatile

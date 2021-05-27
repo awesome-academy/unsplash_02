@@ -1,4 +1,4 @@
-package com.sun.unsplash_02.screen.home
+package com.sun.unsplash_02.screen.home.adapter
 
 import android.view.LayoutInflater
 import android.view.View
