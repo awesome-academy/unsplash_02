@@ -5,10 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true"
     app:cardCornerRadius="@dimen/dp_20"
     android:layout_margin="@dimen/dp_5">
 
     <LinearLayout
+        android:id="@+id/linearCollection"
         android:background="@android:color/darker_gray"
         android:padding="@dimen/dp_8"
         android:layout_width="wrap_content"

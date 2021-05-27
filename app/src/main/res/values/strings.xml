@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ImageEditor</string>
-    <string name="msg_loading">Loading</string>
     <string name="search">title_search</string>
     <string name="collection">Collection</string>
+    <string name="msg_loading">Loading</string>
+    <string name="msg_exit_app">Are you sure want to exit app?</string>
 </resources>

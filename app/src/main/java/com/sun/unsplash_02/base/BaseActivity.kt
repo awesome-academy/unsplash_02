@@ -16,6 +16,7 @@ abstract class BaseActivity : AppCompatActivity() {
             setMessage(getString(R.string.msg_loading))
             setCancelable(false)
             isIndeterminate = true
+            progressDialog = this
         }
         onInit()
         onEvent()
