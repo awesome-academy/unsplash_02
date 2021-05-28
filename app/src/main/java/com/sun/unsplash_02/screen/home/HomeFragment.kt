@@ -1,5 +1,8 @@
 package com.sun.unsplash_02.screen.home
 
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,8 +15,8 @@ import com.sun.unsplash_02.data.source.ImageRepository
 import com.sun.unsplash_02.screen.home.adapter.CollectionAdapter
 import com.sun.unsplash_02.screen.home.adapter.PhotoAdapter
 import com.sun.unsplash_02.screen.main.MainActivity
+import com.sun.unsplash_02.screen.search.SearchFragment
 import kotlinx.android.synthetic.main.fragment_home.*
-
 
 class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickListener {
 
@@ -36,6 +39,8 @@ class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickLi
     }
 
     override fun onInit() {
+        (getBaseActivity() as MainActivity).setSupportActionBar(toolbarMain)
+        setHasOptionsMenu(true)
         CollectionAdapter().run {
             setOnItemClickListener {
                 if (isLoading) {
@@ -94,6 +99,21 @@ class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickLi
             })
         }
         super.onEvent()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_toolbar, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menuSearch -> {
+                val activity = getBaseActivity() as MainActivity
+                activity.loadFragment(SearchFragment.newInstance())
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {

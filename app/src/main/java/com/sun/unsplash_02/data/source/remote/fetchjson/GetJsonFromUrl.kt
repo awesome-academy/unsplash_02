@@ -10,7 +10,6 @@ class GetJsonFromUrl<T> constructor(
 
     private var exception: Exception? = null
 
-
     override fun doInBackground(vararg strings: String?): T? {
         var data: T? = null
         try {

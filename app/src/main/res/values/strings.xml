@@ -4,4 +4,5 @@
     <string name="collection">Collection</string>
     <string name="msg_loading">Loading</string>
     <string name="msg_exit_app">Are you sure want to exit app?</string>
+    <string name="enter_image_name">Enter image name</string>
 </resources>
