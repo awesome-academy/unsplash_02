@@ -35,9 +35,14 @@ class ParseDataWithJson {
     }
 
     fun parseJsonToData(jsonData: String, keyEntity: String): Any {
+        var jsonArray: JSONArray?
         val data = mutableListOf<Any>()
         try {
-            val jsonArray = JSONArray(jsonData)
+            jsonArray = if (keyEntity == ImageEntry.RESULTS) {
+                JSONObject(jsonData).getJSONArray(keyEntity)
+            } else {
+                JSONArray(jsonData)
+            }
             for (i in 0 until (jsonArray?.length() ?: 0)) {
                 val jsonObjects = jsonArray?.getJSONObject(i)
                 val item = ParseDataWithJson().parseJsonToObject(jsonObjects, keyEntity)
@@ -53,7 +58,7 @@ class ParseDataWithJson {
         try {
             jsonObject?.let {
                 when (keyEntity) {
-                    ImageEntry.IMAGE -> {
+                    ImageEntry.IMAGE, ImageEntry.RESULTS -> {
                         return ParseJson.imageParseJson(jsonObject)
                     }
                     CollectionEntry.COLLECTION -> {

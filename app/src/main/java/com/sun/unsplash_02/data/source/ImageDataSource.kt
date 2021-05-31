@@ -19,5 +19,11 @@ interface ImageDataSource {
             collectionId: String,
             page: Int
         )
+
+        fun searchImage(
+            listener: OnFetchDataJsonListener<MutableList<Image?>>,
+            query: String,
+            page: Int
+        )
     }
 }

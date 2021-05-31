@@ -6,6 +6,7 @@ data class Image(
 )
 
 object ImageEntry {
+    const val RESULTS = "results"
     const val IMAGE = "images"
     const val ID = "id"
 }

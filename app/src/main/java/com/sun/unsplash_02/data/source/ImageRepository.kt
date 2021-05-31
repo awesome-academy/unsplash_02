@@ -21,6 +21,14 @@ class ImageRepository private constructor(private val remote: ImageDataSource.Re
         remote.getListImageByCollectionId(listener, collectionId, page)
     }
 
+    fun searchImage(
+        listener: OnFetchDataJsonListener<MutableList<Image?>>,
+        query: String,
+        page: Int
+    ) {
+        remote.searchImage(listener, query, page)
+    }
+
     companion object {
         @Volatile
         private var instance: ImageRepository? = null

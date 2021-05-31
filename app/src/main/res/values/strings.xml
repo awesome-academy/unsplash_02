@@ -2,7 +2,9 @@
     <string name="app_name">ImageEditor</string>
     <string name="search">title_search</string>
     <string name="collection">Collection</string>
+    <string name="enter_image_name">Enter image name</string>
     <string name="msg_loading">Loading</string>
     <string name="msg_exit_app">Are you sure want to exit app?</string>
-    <string name="enter_image_name">Enter image name</string>
+    <string name="msg_empty_search">Please enter text to search</string>
+    <string name="not_found_result">Can not find any result with your query</string>
 </resources>

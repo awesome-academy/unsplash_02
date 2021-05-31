@@ -38,6 +38,17 @@ class ImageRemoteDataResource : ImageDataSource.Remote {
         )
     }
 
+    override fun searchImage(
+        listener: OnFetchDataJsonListener<MutableList<Image?>>,
+        query: String,
+        page: Int
+    ) {
+        GetJsonFromUrl(
+            listener = listener,
+            keyEntity = ImageEntry.RESULTS
+        ).execute("${Constants.URL_SEARCH_PHOTOS}${Constants.QUERY}$query${Constants.PAGE}$page")
+    }
+
     companion object {
         @Volatile
         private var instance: ImageRemoteDataResource? = null

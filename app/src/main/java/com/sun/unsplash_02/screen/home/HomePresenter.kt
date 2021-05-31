@@ -33,7 +33,7 @@ class HomePresenter constructor(private val imageRepository: ImageRepository) :
             override fun onError(exception: Exception?) {
                 view?.onError(exception)
             }
-        }, currentPage++)
+        }, ++currentPage)
 
     override fun loadListImagesByCollection(collectionId: String) {
         imageRepository.getImagesByCollection(object :

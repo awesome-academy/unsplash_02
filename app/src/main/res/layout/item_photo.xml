@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/dp_5"
-    android:layout_margin="@dimen/dp_5">
+    android:layout_margin="@dimen/dp_5"
+    app:cardCornerRadius="@dimen/dp_5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:id="@+id/imageUnsplash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:minHeight="@dimen/dp_150" />
+            android:minHeight="@dimen/dp_150"
+            android:scaleType="fitXY" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
