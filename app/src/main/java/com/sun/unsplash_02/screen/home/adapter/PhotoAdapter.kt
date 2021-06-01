@@ -9,10 +9,11 @@ import com.sun.unsplash_02.data.model.Image
 import com.sun.unsplash_02.utils.LoadImageTask
 import kotlinx.android.synthetic.main.item_photo.view.*
 
-class PhotoAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PhotoAdapter(
+    private val onRecyclerItemClickListener: ((Image) -> Unit)
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var listPhotos = mutableListOf<Image?>()
-    private var itemClickListener: ItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == VIEW_TYPE_ITEM) {
@@ -21,7 +22,7 @@ class PhotoAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     R.layout.item_photo,
                     parent,
                     false
-                ), itemClickListener
+                ), onRecyclerItemClickListener
             )
         } else {
             return LoadingViewHolder(
@@ -63,45 +64,40 @@ class PhotoAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     fun startLoadMore() {
-        listPhotos.add(null)
-        notifyItemInserted(itemCount - 1)
-    }
-
-    fun stopLoadMore() {
-        listPhotos.removeAt(itemCount - 1)
-        notifyItemRemoved(itemCount)
-    }
-
-    fun setItemClickListener(listener: ItemClickListener) {
-        itemClickListener = listener
-    }
-
-    class PhotoViewHolder(view: View, private val itemClickListener: ItemClickListener?) :
-        RecyclerView.ViewHolder(view), View.OnClickListener {
-
-        private var listener: ItemClickListener? = null
-        private var imageData: Image? = null
-
-        fun bind(image: Image) =
-            with(itemView) {
-                image.let {
-                    LoadImageTask(imageUnsplash).execute(image.urls.small)
-                    setOnClickListener(this@PhotoViewHolder)
-                    listener = itemClickListener
-                    imageData = it
-                }
-            }
-
-        override fun onClick(v: View?) {
-            listener?.onItemClick(imageData)
+        if (itemCount > 0) {
+            listPhotos.add(null)
+            notifyItemInserted(itemCount - 1)
         }
     }
 
-    class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-    interface ItemClickListener {
-        fun onItemClick(image: Image?)
+    fun stopLoadMore() {
+        if (itemCount > 0) {
+            listPhotos.removeAt(itemCount - 1)
+            notifyItemRemoved(itemCount)
+        }
     }
+
+    class PhotoViewHolder(view: View, private val onRecyclerItemClickListener: ((Image) -> Unit)) :
+        RecyclerView.ViewHolder(view) {
+
+        private var imageData: Image? = null
+
+        init {
+            itemView.setOnClickListener {
+                imageData?.let {
+                    onRecyclerItemClickListener(it)
+                }
+            }
+        }
+
+        fun bind(image: Image) =
+            with(itemView) {
+                LoadImageTask(imageUnsplash).execute(image.urls.small)
+                imageData = image
+            }
+    }
+
+    class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     companion object {
         private const val VIEW_TYPE_ITEM = 0

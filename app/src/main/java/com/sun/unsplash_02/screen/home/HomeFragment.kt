@@ -12,13 +12,17 @@ import com.sun.unsplash_02.base.BaseFragment
 import com.sun.unsplash_02.data.model.Collection
 import com.sun.unsplash_02.data.model.Image
 import com.sun.unsplash_02.data.source.ImageRepository
+import com.sun.unsplash_02.data.source.local.ImageLocalDataSource
+import com.sun.unsplash_02.data.source.local.SearchHistoryPreference
+import com.sun.unsplash_02.data.source.remote.ImageRemoteDataResource
 import com.sun.unsplash_02.screen.home.adapter.CollectionAdapter
 import com.sun.unsplash_02.screen.home.adapter.PhotoAdapter
 import com.sun.unsplash_02.screen.main.MainActivity
 import com.sun.unsplash_02.screen.search.SearchFragment
+import com.sun.unsplash_02.utils.Constants
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickListener {
+class HomeFragment : BaseFragment(), HomeContract.View {
 
     private var collectionAdapter: CollectionAdapter? = null
     private var photoAdapter: PhotoAdapter? = null
@@ -31,7 +35,12 @@ class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickLi
     override fun getLayoutResourceId() = R.layout.fragment_home
 
     override fun onViewCreated(view: View) {
-        HomePresenter(ImageRepository.getInstance()).run {
+        HomePresenter(
+            ImageRepository.getInstance(
+                ImageRemoteDataResource.getInstance(),
+                ImageLocalDataSource.getInstance(SearchHistoryPreference(requireContext()))
+            )
+        ).run {
             setView(this@HomeFragment)
             onStart()
             homePresenter = this
@@ -41,27 +50,26 @@ class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickLi
     override fun onInit() {
         (getBaseActivity() as MainActivity).setSupportActionBar(toolbarMain)
         setHasOptionsMenu(true)
-        CollectionAdapter().run {
-            setOnItemClickListener {
-                if (isLoading) {
-                    photoAdapter?.stopLoadMore()
-                    isLoading = false
-                }
-                showLoading()
-                if (currentCollectionId != it.id) {
-                    homePresenter.resetCurrentPage()
-                    recyclerPhoto.smoothScrollToPosition(0)
-                }
-                currentCollectionId = it.id
-                selectedType = TYPE_PHOTO_COLLECTION
-                photoAdapter?.clear()
-                homePresenter.loadListImagesByCollection(it.id)
+        CollectionAdapter {
+            if (isLoading) {
+                photoAdapter?.stopLoadMore()
+                isLoading = false
             }
+            showLoading()
+            if (currentCollectionId != it.id) {
+                homePresenter.resetCurrentPage()
+                recyclerPhoto.smoothScrollToPosition(0)
+            }
+            currentCollectionId = it.id
+            selectedType = TYPE_PHOTO_COLLECTION
+            photoAdapter?.clear()
+            homePresenter.loadListImagesByCollection(it.id)
+        }.run {
             collectionAdapter = this
             recyclerCollection.adapter = this
         }
-        PhotoAdapter().run {
-            setItemClickListener(this@HomeFragment)
+        PhotoAdapter {
+        }.run {
             photoAdapter = this
             recyclerPhoto.adapter = this
         }
@@ -76,29 +84,30 @@ class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickLi
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val layoutManager = recyclerPhoto.layoutManager as GridLayoutManager
-                    if (!isLoading) {
-                        photoAdapter?.let {
-                            if (layoutManager.findLastCompletelyVisibleItemPosition() ==
-                                it.getListPhotos().size - 1
-                            ) {
-                                recyclerView.post {
-                                    it.startLoadMore()
-                                }
-                                if (selectedType == TYPE_PHOTO) {
-                                    homePresenter.loadListImages()
-                                } else {
-                                    currentCollectionId?.let { id ->
-                                        homePresenter.loadListImagesByCollection(id)
-                                    }
-                                }
-                                isLoading = true
-                            }
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
+                    photoAdapter?.let {
+                        if (!isLoading && totalItemCount <= lastVisibleItem + Constants.VISIBLE_THRESHOLD
+                        ) {
+                            loadMoreData()
+                            isLoading = true
                         }
                     }
                 }
             })
         }
         super.onEvent()
+    }
+
+    private fun loadMoreData() {
+        photoAdapter?.startLoadMore()
+        if (selectedType == TYPE_PHOTO) {
+            homePresenter.loadListImages()
+        } else {
+            currentCollectionId?.let { id ->
+                homePresenter.loadListImagesByCollection(id)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -143,10 +152,6 @@ class HomeFragment : BaseFragment(), HomeContract.View, PhotoAdapter.ItemClickLi
 
     override fun onError(e: Exception?) {
         Toast.makeText(context, e?.message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onItemClick(image: Image?) {
-        Toast.makeText(context, image?.urls?.full, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

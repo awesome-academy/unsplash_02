@@ -17,3 +17,7 @@ fun EditText.hideKeyboard(activity: Activity) {
     clearFocus()
     inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
 }
+
+fun EditText.moveCursorToEnd() {
+    setSelection(this.text.toString().length)
+}

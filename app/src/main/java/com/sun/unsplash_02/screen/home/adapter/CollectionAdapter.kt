@@ -8,7 +8,9 @@ import com.sun.unsplash_02.R
 import com.sun.unsplash_02.data.model.Collection
 import kotlinx.android.synthetic.main.item_collection.view.*
 
-class CollectionAdapter :
+class CollectionAdapter(
+    private val onRecyclerItemClickListener: (Collection) -> Unit
+) :
     RecyclerView.Adapter<CollectionAdapter.CollectionViewHolder>() {
 
     private var rowSelected = -1
@@ -20,7 +22,7 @@ class CollectionAdapter :
                 R.layout.item_collection,
                 parent,
                 false
-            )
+            ), onRecyclerItemClickListener
         )
 
     override fun onBindViewHolder(holder: CollectionViewHolder, position: Int) {
@@ -35,13 +37,22 @@ class CollectionAdapter :
         notifyDataSetChanged()
     }
 
-    private var onItemClickListener: ((Collection) -> Unit)? = null
+    inner class CollectionViewHolder(
+        view: View,
+        private val onRecyclerItemClickListener: (Collection) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
 
-    fun setOnItemClickListener(listener: (Collection) -> Unit) {
-        onItemClickListener = listener
-    }
+        private var collectionData: Collection? = null
 
-    inner class CollectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        init {
+            itemView.setOnClickListener {
+                collectionData?.let {
+                    onRecyclerItemClickListener(it)
+                    rowSelected = position
+                    notifyDataSetChanged()
+                }
+            }
+        }
 
         fun bind(collection: Collection, position: Int) = with(itemView) {
             if (rowSelected == position) {
@@ -50,13 +61,7 @@ class CollectionAdapter :
                 linearCollection.setBackgroundResource(R.color.gray_100)
             }
             textCollectionName.text = collection.title
-            setOnClickListener {
-                onItemClickListener?.let {
-                    it(collection)
-                    rowSelected = position
-                    notifyDataSetChanged()
-                }
-            }
+            collectionData = collection
         }
     }
 }

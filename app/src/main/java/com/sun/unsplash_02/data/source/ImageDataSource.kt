@@ -6,7 +6,12 @@ import com.sun.unsplash_02.data.source.remote.OnFetchDataJsonListener
 
 interface ImageDataSource {
 
-    interface Local
+    interface Local {
+
+        fun addSearchHistory(history: String)
+
+        fun getSearchHistory(): List<String>
+    }
 
     interface Remote {
 

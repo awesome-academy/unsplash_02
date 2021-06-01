@@ -1,7 +1,6 @@
 package com.sun.unsplash_02.screen.search
 
 import com.sun.unsplash_02.base.BasePresenter
-import com.sun.unsplash_02.data.model.Collection
 import com.sun.unsplash_02.data.model.Image
 
 interface SearchContract {
@@ -15,5 +14,7 @@ interface SearchContract {
 
     interface Presenter : BasePresenter<View> {
         fun searchImage(query: String)
+        fun addHistory(history: String)
+        fun getHistory(): List<String>
     }
 }

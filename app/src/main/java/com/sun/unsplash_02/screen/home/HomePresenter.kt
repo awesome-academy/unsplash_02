@@ -39,15 +39,18 @@ class HomePresenter constructor(private val imageRepository: ImageRepository) :
         imageRepository.getImagesByCollection(object :
             OnFetchDataJsonListener<MutableList<Image?>> {
             override fun onSuccess(data: MutableList<Image?>) {
-                view?.hideLoading()
-                view?.onImageLoaded(data)
+                view?.run {
+                    hideLoading()
+                    onImageLoaded(data)
+                }
             }
 
             override fun onError(exception: Exception?) {
-                view?.hideLoading()
-                view?.onError(exception)
+                view?.run {
+                    hideLoading()
+                    onError(exception)
+                }
             }
-
         }, collectionId, currentPage++)
     }
 

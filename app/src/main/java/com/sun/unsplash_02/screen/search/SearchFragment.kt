@@ -9,22 +9,32 @@ import com.sun.unsplash_02.R
 import com.sun.unsplash_02.base.BaseFragment
 import com.sun.unsplash_02.data.model.Image
 import com.sun.unsplash_02.data.source.ImageRepository
+import com.sun.unsplash_02.data.source.local.ImageLocalDataSource
+import com.sun.unsplash_02.data.source.local.SearchHistoryPreference
+import com.sun.unsplash_02.data.source.remote.ImageRemoteDataResource
+import com.sun.unsplash_02.screen.home.adapter.HistorySearchAdapter
 import com.sun.unsplash_02.screen.home.adapter.PhotoAdapter
 import com.sun.unsplash_02.screen.main.MainActivity
-import com.sun.unsplash_02.utils.hideKeyboard
-import com.sun.unsplash_02.utils.showKeyboard
+import com.sun.unsplash_02.utils.*
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment : BaseFragment(), SearchContract.View, PhotoAdapter.ItemClickListener {
+class SearchFragment : BaseFragment(), SearchContract.View {
 
     private lateinit var searchPresenter: SearchPresenter
     private var photoAdapter: PhotoAdapter? = null
+    private var historySearchAdapter: HistorySearchAdapter? = null
+    private var currentSearchText: String? = null
     private var isLoading = false
 
     override fun getLayoutResourceId() = R.layout.fragment_search
 
     override fun onViewCreated(view: View) {
-        SearchPresenter(ImageRepository.getInstance()).run {
+        SearchPresenter(
+            ImageRepository.getInstance(
+                ImageRemoteDataResource.getInstance(),
+                ImageLocalDataSource.getInstance(SearchHistoryPreference(requireContext()))
+            )
+        ).run {
             setView(this@SearchFragment)
             onStart()
             searchPresenter = this
@@ -32,12 +42,34 @@ class SearchFragment : BaseFragment(), SearchContract.View, PhotoAdapter.ItemCli
     }
 
     override fun onInit() {
-        activity?.let { edtSearch.showKeyboard(it) }
+        activity?.let { editTextSearch.showKeyboard(it) }
         toolbarSearch.setNavigationIcon(R.drawable.ic_arrow_back)
-        PhotoAdapter().run {
+        PhotoAdapter {
+        }.run {
             photoAdapter = this
             recyclerSearch.adapter = this
-            setItemClickListener(this@SearchFragment)
+        }
+        HistorySearchAdapter {
+            editTextSearch.run {
+                setText(it)
+                moveCursorToEnd()
+            }
+        }.run {
+            historySearchAdapter = this
+            recyclerHistorySearch.adapter = this
+        }
+
+        editTextSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                recyclerSearch.toGone()
+                recyclerHistorySearch.toVisible()
+                val listHistory = searchPresenter.getHistory().toMutableList()
+                if (listHistory.size > 0)
+                    historySearchAdapter?.setListHistory(listHistory)
+            } else {
+                recyclerHistorySearch.toGone()
+                recyclerSearch.toVisible()
+            }
         }
         super.onInit()
     }
@@ -47,10 +79,21 @@ class SearchFragment : BaseFragment(), SearchContract.View, PhotoAdapter.ItemCli
             activity?.supportFragmentManager?.popBackStack()
         }
         imageSearch.setOnClickListener {
-            val query = edtSearch.text.toString().trim()
+            val query = editTextSearch.text.toString().trim()
             if (!TextUtils.isEmpty(query)) {
-                searchPresenter.searchImage(query)
-                activity?.let { edtSearch.hideKeyboard(it) }
+                if (query == currentSearchText) {
+                    searchPresenter.searchImage(query)
+                } else {
+                    currentSearchText = query
+                    photoAdapter?.clear()
+                    recyclerSearch.smoothScrollToPosition(0)
+                    searchPresenter.apply {
+                        resetPage()
+                        searchImage(query)
+                    }
+                }
+                activity?.let { editTextSearch.hideKeyboard(it) }
+                searchPresenter.addHistory(query)
             } else {
                 Toast.makeText(context, getString(R.string.msg_empty_search), Toast.LENGTH_LONG)
                     .show()
@@ -65,22 +108,24 @@ class SearchFragment : BaseFragment(), SearchContract.View, PhotoAdapter.ItemCli
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = recyclerSearch.layoutManager as GridLayoutManager
-                if (!isLoading) {
-                    photoAdapter?.let {
-                        if (layoutManager.findLastCompletelyVisibleItemPosition() ==
-                            it.getListPhotos().size - 1
-                        ) {
-                            recyclerView.post {
-                                it.startLoadMore()
-                            }
-                            searchPresenter.searchImage(edtSearch.text.toString().trim())
-                            isLoading = true
-                        }
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
+                photoAdapter?.let {
+                    if (!isLoading && totalItemCount <= lastVisibleItem + Constants.VISIBLE_THRESHOLD
+                    ) {
+                        loadMoreData()
+                        isLoading = true
                     }
                 }
+
             }
         })
         super.onEvent()
+    }
+
+    private fun loadMoreData() {
+        photoAdapter?.startLoadMore()
+        searchPresenter.searchImage(editTextSearch.text.toString().trim())
     }
 
     override fun onDestroy() {
@@ -109,10 +154,6 @@ class SearchFragment : BaseFragment(), SearchContract.View, PhotoAdapter.ItemCli
 
     override fun onError(e: Exception?) {
         Toast.makeText(context, e?.message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onItemClick(image: Image?) {
-        Toast.makeText(context, image?.urls?.full, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

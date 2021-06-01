@@ -29,6 +29,10 @@ class SearchPresenter constructor(private val imageRepository: ImageRepository) 
         }, query, ++currentPage)
     }
 
+    override fun addHistory(history: String) = imageRepository.saveHistoryImageSearch(history)
+
+    override fun getHistory(): List<String> = imageRepository.getHistoryImageSearch()
+
     override fun onStart() {
     }
 
@@ -38,6 +42,10 @@ class SearchPresenter constructor(private val imageRepository: ImageRepository) 
 
     override fun setView(view: SearchContract.View?) {
         this.view = view
+    }
+
+    fun resetPage() {
+        currentPage = 0
     }
 
     companion object {
