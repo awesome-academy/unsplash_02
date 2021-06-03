@@ -9,7 +9,9 @@ import com.sun.unsplash_02.utils.LoadImageTask
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 
-class DetailFragment : BaseFragment() {
+class DetailFragment : BaseFragment(), View.OnClickListener {
+
+    private var imageData: Image? = null
 
     override fun getLayoutResourceId() = R.layout.fragment_detail
 
@@ -20,11 +22,33 @@ class DetailFragment : BaseFragment() {
                 activity?.supportFragmentManager?.popBackStack()
             }
         }
+        view.run {
+            imageCrop.setOnClickListener(this@DetailFragment)
+            imageFilter.setOnClickListener(this@DetailFragment)
+            imageDraw.setOnClickListener(this@DetailFragment)
+            imageBrightness.setOnClickListener(this@DetailFragment)
+            imageIcon.setOnClickListener(this@DetailFragment)
+        }
     }
 
     override fun initData() {
-        val image = arguments?.getParcelable<Image>(ARGUMENT_IMAGE)
-        LoadImageTask(imageDetail).execute(image?.urls?.full)
+        imageData = arguments?.getParcelable(ARGUMENT_IMAGE)
+        LoadImageTask(imageDetail).execute(imageData?.urls?.full)
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.imageCrop -> {
+            }
+            R.id.imageFilter -> {
+            }
+            R.id.imageDraw -> {
+            }
+            R.id.imageBrightness -> {
+            }
+            R.id.imageIcon -> {
+            }
+        }
     }
 
     companion object {
