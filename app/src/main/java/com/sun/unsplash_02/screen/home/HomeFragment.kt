@@ -5,6 +5,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sun.unsplash_02.R
@@ -15,17 +16,27 @@ import com.sun.unsplash_02.data.source.ImageRepository
 import com.sun.unsplash_02.data.source.local.ImageLocalDataSource
 import com.sun.unsplash_02.data.source.local.SearchHistoryPreference
 import com.sun.unsplash_02.data.source.remote.ImageRemoteDataResource
+import com.sun.unsplash_02.screen.detail.DetailFragment
 import com.sun.unsplash_02.screen.home.adapter.CollectionAdapter
 import com.sun.unsplash_02.screen.home.adapter.PhotoAdapter
-import com.sun.unsplash_02.screen.main.MainActivity
 import com.sun.unsplash_02.screen.search.SearchFragment
-import com.sun.unsplash_02.utils.Constants
+import com.sun.unsplash_02.utils.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : BaseFragment(), HomeContract.View {
 
-    private var collectionAdapter: CollectionAdapter? = null
-    private var photoAdapter: PhotoAdapter? = null
+    private val collectionAdapter: CollectionAdapter by lazy {
+        CollectionAdapter {
+            handleCollectionClick(it)
+        }
+    }
+    private val photoAdapter: PhotoAdapter by lazy {
+        PhotoAdapter {
+            handlePhotoClick(it)
+        }
+    }
+
     private var currentCollectionId: String? = null
     private var selectedType = TYPE_PHOTO
     private var isLoading = false
@@ -34,7 +45,30 @@ class HomeFragment : BaseFragment(), HomeContract.View {
 
     override fun getLayoutResourceId() = R.layout.fragment_home
 
-    override fun onViewCreated(view: View) {
+    override fun initView(view: View) {
+        view.recyclerCollection.adapter = collectionAdapter
+        view.recyclerPhoto.run {
+            adapter = photoAdapter
+            smoothScrollToPosition(0)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val layoutManager = recyclerPhoto.layoutManager as GridLayoutManager
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
+                    if (!isLoading && totalItemCount <= lastVisibleItem + Constants.VISIBLE_THRESHOLD) {
+                        loadMoreData()
+                        isLoading = true
+                    }
+                }
+            })
+        }
+    }
+
+    override fun initData() {
+        (activity as AppCompatActivity).setSupportActionBar(toolbarMain)
+        setHasOptionsMenu(true)
         HomePresenter(
             ImageRepository.getInstance(
                 ImageRemoteDataResource.getInstance(),
@@ -47,69 +81,6 @@ class HomeFragment : BaseFragment(), HomeContract.View {
         }
     }
 
-    override fun onInit() {
-        (getBaseActivity() as MainActivity).setSupportActionBar(toolbarMain)
-        setHasOptionsMenu(true)
-        CollectionAdapter {
-            if (isLoading) {
-                photoAdapter?.stopLoadMore()
-                isLoading = false
-            }
-            showLoading()
-            if (currentCollectionId != it.id) {
-                homePresenter.resetCurrentPage()
-                recyclerPhoto.smoothScrollToPosition(0)
-            }
-            currentCollectionId = it.id
-            selectedType = TYPE_PHOTO_COLLECTION
-            photoAdapter?.clear()
-            homePresenter.loadListImagesByCollection(it.id)
-        }.run {
-            collectionAdapter = this
-            recyclerCollection.adapter = this
-        }
-        PhotoAdapter {
-        }.run {
-            photoAdapter = this
-            recyclerPhoto.adapter = this
-        }
-        super.onInit()
-    }
-
-    override fun onEvent() {
-        recyclerPhoto.run {
-            smoothScrollToPosition(0)
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = recyclerPhoto.layoutManager as GridLayoutManager
-                    val totalItemCount = layoutManager.itemCount
-                    val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
-                    photoAdapter?.let {
-                        if (!isLoading && totalItemCount <= lastVisibleItem + Constants.VISIBLE_THRESHOLD
-                        ) {
-                            loadMoreData()
-                            isLoading = true
-                        }
-                    }
-                }
-            })
-        }
-        super.onEvent()
-    }
-
-    private fun loadMoreData() {
-        photoAdapter?.startLoadMore()
-        if (selectedType == TYPE_PHOTO) {
-            homePresenter.loadListImages()
-        } else {
-            currentCollectionId?.let { id ->
-                homePresenter.loadListImagesByCollection(id)
-            }
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_toolbar, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -118,8 +89,7 @@ class HomeFragment : BaseFragment(), HomeContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuSearch -> {
-                val activity = getBaseActivity() as MainActivity
-                activity.loadFragment(SearchFragment.newInstance())
+                addFragment(R.id.frameMainContainer, SearchFragment.newInstance())
             }
         }
         return super.onOptionsItemSelected(item)
@@ -131,27 +101,58 @@ class HomeFragment : BaseFragment(), HomeContract.View {
     }
 
     override fun showLoading() {
-        (getBaseActivity() as MainActivity).showDialogLoading()
+        showProgressDialog()
     }
 
     override fun hideLoading() {
-        (getBaseActivity() as MainActivity).hideDialogLoading()
+        hideProgressDialog()
     }
 
     override fun onCollectionLoaded(collections: MutableList<Collection>) {
-        collectionAdapter?.setListCollections(collections)
+        collectionAdapter.setListCollections(collections)
     }
 
     override fun onImageLoaded(images: MutableList<Image?>) {
         if (isLoading) {
-            photoAdapter?.stopLoadMore()
+            photoAdapter.stopLoadMore()
             isLoading = false
         }
-        photoAdapter?.setListPhotos(images)
+        photoAdapter.setListPhotos(images)
     }
 
     override fun onError(e: Exception?) {
         Toast.makeText(context, e?.message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleCollectionClick(collection: Collection) {
+        if (isLoading) {
+            photoAdapter.stopLoadMore()
+            isLoading = false
+        }
+        showLoading()
+        if (currentCollectionId != collection.id) {
+            homePresenter.resetCurrentPage()
+            recyclerPhoto.smoothScrollToPosition(0)
+        }
+        currentCollectionId = collection.id
+        selectedType = TYPE_PHOTO_COLLECTION
+        photoAdapter.clear()
+        homePresenter.loadListImagesByCollection(collection.id)
+    }
+
+    private fun handlePhotoClick(image: Image) {
+        addFragment(R.id.frameMainContainer, DetailFragment.newInstance(image))
+    }
+
+    private fun loadMoreData() {
+        photoAdapter.startLoadMore()
+        if (selectedType == TYPE_PHOTO) {
+            homePresenter.loadListImages()
+        } else {
+            currentCollectionId?.let { id ->
+                homePresenter.loadListImagesByCollection(id)
+            }
+        }
     }
 
     companion object {

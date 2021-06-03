@@ -7,7 +7,7 @@
     tools:context=".screen.main.MainActivity">
 
     <FrameLayout
-        android:id="@+id/frameContainer"
+        android:id="@+id/frameMainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/dp_5"

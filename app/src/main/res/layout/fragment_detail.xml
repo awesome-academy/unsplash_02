@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray_100"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/detail_image"
+        app:titleMarginStart="@dimen/dp_30"
+        app:titleTextColor="@android:color/white" />
+
+    <ImageView
+        android:id="@+id/imageCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_crop"
+        app:layout_constraintEnd_toEndOf="@id/imageFilter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarDetail" />
+
+    <TextView
+        android:id="@+id/textCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/crop"
+        app:layout_constraintEnd_toEndOf="@+id/imageCrop"
+        app:layout_constraintStart_toStartOf="@id/imageCrop"
+        app:layout_constraintTop_toBottomOf="@id/imageCrop" />
+
+
+    <ImageView
+        android:id="@+id/imageFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintEnd_toStartOf="@id/imageDraw"
+        app:layout_constraintStart_toEndOf="@id/imageCrop"
+        app:layout_constraintTop_toBottomOf="@id/toolbarDetail" />
+
+    <TextView
+        android:id="@+id/textFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter"
+        app:layout_constraintEnd_toEndOf="@id/imageFilter"
+        app:layout_constraintStart_toStartOf="@id/imageFilter"
+        app:layout_constraintTop_toBottomOf="@id/imageFilter" />
+
+    <ImageView
+        android:id="@+id/imageDraw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_brush"
+        app:layout_constraintEnd_toStartOf="@id/imageBrightness"
+        app:layout_constraintStart_toEndOf="@id/imageFilter"
+        app:layout_constraintTop_toBottomOf="@id/toolbarDetail" />
+
+    <TextView
+        android:id="@+id/textDraw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/draw"
+        app:layout_constraintEnd_toEndOf="@id/imageDraw"
+        app:layout_constraintStart_toStartOf="@id/imageDraw"
+        app:layout_constraintTop_toBottomOf="@id/imageDraw" />
+
+
+    <ImageView
+        android:id="@+id/imageBrightness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_brightness"
+        app:layout_constraintEnd_toStartOf="@id/imageIcon"
+        app:layout_constraintStart_toEndOf="@id/imageDraw"
+        app:layout_constraintTop_toBottomOf="@id/toolbarDetail" />
+
+    <TextView
+        android:id="@+id/textBrightness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/brightness"
+        app:layout_constraintEnd_toEndOf="@id/imageBrightness"
+        app:layout_constraintStart_toStartOf="@id/imageBrightness"
+        app:layout_constraintTop_toBottomOf="@id/imageBrightness" />
+
+
+    <ImageView
+        android:id="@+id/imageIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_emotion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageBrightness"
+        app:layout_constraintTop_toBottomOf="@id/toolbarDetail" />
+
+    <TextView
+        android:id="@+id/textIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/icon"
+        app:layout_constraintEnd_toEndOf="@id/imageIcon"
+        app:layout_constraintStart_toStartOf="@id/imageIcon"
+        app:layout_constraintTop_toBottomOf="@id/imageIcon" />
+
+    <com.sun.unsplash_02.utils.customview.ZoomImageView
+        android:id="@+id/imageDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textIcon" />
+</androidx.constraintlayout.widget.ConstraintLayout>

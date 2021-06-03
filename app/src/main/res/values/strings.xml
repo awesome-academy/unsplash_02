@@ -7,4 +7,10 @@
     <string name="msg_exit_app">Are you sure want to exit app?</string>
     <string name="msg_empty_search">Please enter text to search</string>
     <string name="not_found_result">Can not find any result with your query</string>
+    <string name="detail_image">Detail Image</string>
+    <string name="crop">Crop</string>
+    <string name="filter">Filter</string>
+    <string name="draw">Draw</string>
+    <string name="brightness">Brightness</string>
+    <string name="icon">Icon</string>
 </resources>

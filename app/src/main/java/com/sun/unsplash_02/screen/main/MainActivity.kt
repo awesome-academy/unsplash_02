@@ -1,7 +1,6 @@
 package com.sun.unsplash_02.screen.main
 
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import com.sun.unsplash_02.R
 import com.sun.unsplash_02.base.BaseActivity
 import com.sun.unsplash_02.screen.home.HomeFragment
@@ -10,16 +9,20 @@ class MainActivity : BaseActivity() {
 
     override fun getLayoutResourceId() = R.layout.activity_main
 
-    override fun onInit() {
-        loadFragment(HomeFragment.newInstance())
+    override fun initView() {
+        supportFragmentManager
+            .beginTransaction()
+            .addToBackStack(HomeFragment::javaClass.name)
+            .replace(R.id.frameMainContainer, HomeFragment.newInstance())
+            .commit()
     }
 
-    override fun onEvent() {
+    override fun initData() {
     }
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0) {
-            when (supportFragmentManager.findFragmentById(R.id.frameContainer)) {
+            when (supportFragmentManager.findFragmentById(R.id.frameMainContainer)) {
                 is HomeFragment -> {
                     showAlertDialog(getString(R.string.msg_exit_app)) {
                         finish()
@@ -42,21 +45,5 @@ class MainActivity : BaseActivity() {
             .setPositiveButton(android.R.string.yes) { _, _ -> onConfirm() }
             .create()
             .show()
-    }
-
-    fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().run {
-            replace(R.id.frameContainer, fragment)
-            addToBackStack(null)
-            commit()
-        }
-    }
-
-    fun showDialogLoading() {
-        showProgressDialog()
-    }
-
-    fun hideDialogLoading() {
-        dismissProgressDialog()
     }
 }

@@ -18,15 +18,13 @@ abstract class BaseActivity : AppCompatActivity() {
             isIndeterminate = true
             progressDialog = this
         }
-        onInit()
-        onEvent()
+        initView()
+        initData()
     }
 
     abstract fun getLayoutResourceId(): Int
-
-    abstract fun onInit()
-
-    abstract fun onEvent()
+    abstract fun initView()
+    abstract fun initData()
 
     fun showProgressDialog() {
         progressDialog?.let {
