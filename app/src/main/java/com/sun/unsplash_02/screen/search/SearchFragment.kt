@@ -42,7 +42,10 @@ class SearchFragment : BaseFragment(), SearchContract.View {
         view.toolbarSearch.run {
             setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener {
-                activity?.supportFragmentManager?.popBackStack()
+                activity?.let {
+                    it.supportFragmentManager?.popBackStack()
+                    view.editTextSearch.hideKeyboard(it)
+                }
             }
         }
         view.editTextSearch.setOnFocusChangeListener { _, hasFocus ->

@@ -8,7 +8,7 @@ fun EditText.showKeyboard(activity: Activity) {
     val inputMethodManager =
         activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     requestFocus()
-    inputMethodManager.showSoftInput(this, 0)
+    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
 }
 
 fun EditText.hideKeyboard(activity: Activity) {

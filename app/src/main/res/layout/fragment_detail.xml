@@ -35,7 +35,6 @@
         app:layout_constraintStart_toStartOf="@id/imageCrop"
         app:layout_constraintTop_toBottomOf="@id/imageCrop" />
 
-
     <ImageView
         android:id="@+id/imageFilter"
         android:layout_width="wrap_content"
@@ -72,7 +71,6 @@
         app:layout_constraintStart_toStartOf="@id/imageDraw"
         app:layout_constraintTop_toBottomOf="@id/imageDraw" />
 
-
     <ImageView
         android:id="@+id/imageBrightness"
         android:layout_width="wrap_content"
@@ -90,7 +88,6 @@
         app:layout_constraintEnd_toEndOf="@id/imageBrightness"
         app:layout_constraintStart_toStartOf="@id/imageBrightness"
         app:layout_constraintTop_toBottomOf="@id/imageBrightness" />
-
 
     <ImageView
         android:id="@+id/imageIcon"
