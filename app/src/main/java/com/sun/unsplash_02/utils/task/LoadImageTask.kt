@@ -1,4 +1,4 @@
-package com.sun.unsplash_02.utils
+package com.sun.unsplash_02.utils.task
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

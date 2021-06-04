@@ -11,9 +11,12 @@ import com.sun.unsplash_02.screen.edit.crop.CropFragment
 import com.sun.unsplash_02.screen.edit.draw.DrawFragment
 import com.sun.unsplash_02.screen.edit.emoji.EmojiFragment
 import com.sun.unsplash_02.screen.edit.filter.FilterFragment
+import com.sun.unsplash_02.utils.extension.toGone
 import kotlinx.android.synthetic.main.activity_edit.*
 
 class EditActivity : BaseActivity() {
+
+    private var completeEditListener: CompleteEditListener? = null
 
     override fun getLayoutResourceId() = R.layout.activity_edit
 
@@ -22,30 +25,56 @@ class EditActivity : BaseActivity() {
             setNavigationIcon(R.drawable.ic_close)
             setOnClickListener { finish() }
         }
+        imageComplete.setOnClickListener {
+            completeEditListener?.onComplete()
+            toolbarEdit.title = getString(R.string.result)
+            imageComplete.toGone()
+        }
     }
 
     override fun initData() {
         intent?.let {
+            val imageUrl = it.getStringExtra(EXTRA_IMAGE)
             when (it.getIntExtra(EXTRA_EDIT_TYPE, 0)) {
                 TypeEdit.BRIGHTNESS.value -> {
                     toolbarEdit.title = getString(R.string.brightness)
-                    replaceFragment(BrightnessFragment.newInstance())
+                    imageUrl?.let { imageUri ->
+                        replaceFragment(BrightnessFragment.newInstance(imageUri).also { fragment ->
+                            completeEditListener = fragment
+                        })
+                    }
                 }
                 TypeEdit.CROP.value -> {
                     toolbarEdit.title = getString(R.string.crop)
-                    replaceFragment(CropFragment.newInstance())
+                    imageUrl?.let {
+                        replaceFragment(CropFragment.newInstance().also { fragment ->
+                            completeEditListener = fragment
+                        })
+                    }
                 }
                 TypeEdit.DRAW.value -> {
                     toolbarEdit.title = getString(R.string.draw)
-                    replaceFragment(DrawFragment.newInstance())
+                    imageUrl?.let {
+                        replaceFragment(DrawFragment.newInstance().also { fragment ->
+                            completeEditListener = fragment
+                        })
+                    }
                 }
                 TypeEdit.FILTER.value -> {
                     toolbarEdit.title = getString(R.string.filter)
-                    replaceFragment(FilterFragment.newInstance())
+                    imageUrl?.let {
+                        replaceFragment(FilterFragment.newInstance().also { fragment ->
+                            completeEditListener = fragment
+                        })
+                    }
                 }
                 TypeEdit.EMOJI.value -> {
                     toolbarEdit.title = getString(R.string.icon)
-                    replaceFragment(EmojiFragment.newInstance())
+                    imageUrl?.let {
+                        replaceFragment(EmojiFragment.newInstance().also { fragment ->
+                            completeEditListener = fragment
+                        })
+                    }
                 }
                 else -> Unit
             }

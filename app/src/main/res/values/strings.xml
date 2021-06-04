@@ -18,4 +18,6 @@
     <string name="downloading_file">Downloading file. Please wait...</string>
     <string name="failed_save_bitmap">Failed to save bitmap.</string>
     <string name="failed_open_output_stream">Failed to open output stream.</string>
+    <string name="can_not_save_image">Can not save image</string>
+    <string name="result">Result</string>
 </resources>

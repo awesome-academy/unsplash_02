@@ -1,4 +1,4 @@
-package com.sun.unsplash_02.utils
+package com.sun.unsplash_02.utils.extension
 
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.sun.unsplash_02.utils
+package com.sun.unsplash_02.utils.task
 
 import android.content.ContentValues
 import android.content.Context
@@ -8,6 +8,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import com.sun.unsplash_02.R
 import com.sun.unsplash_02.data.model.Image
+import com.sun.unsplash_02.utils.sdk29AndUp
 import java.io.BufferedInputStream
 import java.io.IOException
 import java.lang.ref.WeakReference

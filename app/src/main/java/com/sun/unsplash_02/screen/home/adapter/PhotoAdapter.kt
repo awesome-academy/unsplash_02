@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sun.unsplash_02.R
 import com.sun.unsplash_02.data.model.Image
-import com.sun.unsplash_02.utils.LoadImageTask
+import com.sun.unsplash_02.utils.task.LoadImageTask
 import kotlinx.android.synthetic.main.item_photo.view.*
 
 class PhotoAdapter(

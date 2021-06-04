@@ -3,8 +3,9 @@ package com.sun.unsplash_02.screen.edit.filter
 import android.view.View
 import com.sun.unsplash_02.R
 import com.sun.unsplash_02.base.BaseFragment
+import com.sun.unsplash_02.screen.edit.CompleteEditListener
 
-class FilterFragment : BaseFragment() {
+class FilterFragment : BaseFragment(), CompleteEditListener {
 
     override fun getLayoutResourceId() = R.layout.fragment_filter
 
@@ -12,6 +13,9 @@ class FilterFragment : BaseFragment() {
     }
 
     override fun initData() {
+    }
+
+    override fun onComplete() {
     }
 
     companion object {

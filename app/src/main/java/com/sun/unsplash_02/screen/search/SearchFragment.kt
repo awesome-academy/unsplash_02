@@ -16,6 +16,7 @@ import com.sun.unsplash_02.screen.detail.DetailFragment
 import com.sun.unsplash_02.screen.home.adapter.HistorySearchAdapter
 import com.sun.unsplash_02.screen.home.adapter.PhotoAdapter
 import com.sun.unsplash_02.utils.*
+import com.sun.unsplash_02.utils.extension.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
 
@@ -43,7 +44,7 @@ class SearchFragment : BaseFragment(), SearchContract.View {
             setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener {
                 activity?.let {
-                    it.supportFragmentManager?.popBackStack()
+                    it.supportFragmentManager.popBackStack()
                     view.editTextSearch.hideKeyboard(it)
                 }
             }

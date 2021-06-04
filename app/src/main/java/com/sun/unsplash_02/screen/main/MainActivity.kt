@@ -3,7 +3,7 @@ package com.sun.unsplash_02.screen.main
 import com.sun.unsplash_02.R
 import com.sun.unsplash_02.base.BaseActivity
 import com.sun.unsplash_02.screen.home.HomeFragment
-import com.sun.unsplash_02.utils.showAlertDialog
+import com.sun.unsplash_02.utils.extension.showAlertDialog
 
 class MainActivity : BaseActivity() {
 

@@ -21,6 +21,9 @@ import com.sun.unsplash_02.screen.home.adapter.CollectionAdapter
 import com.sun.unsplash_02.screen.home.adapter.PhotoAdapter
 import com.sun.unsplash_02.screen.search.SearchFragment
 import com.sun.unsplash_02.utils.*
+import com.sun.unsplash_02.utils.extension.addFragment
+import com.sun.unsplash_02.utils.extension.hideProgressDialog
+import com.sun.unsplash_02.utils.extension.showProgressDialog
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 

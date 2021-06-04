@@ -15,7 +15,7 @@ import com.sun.unsplash_02.base.BaseFragment
 import com.sun.unsplash_02.data.model.Image
 import com.sun.unsplash_02.data.model.TypeEdit
 import com.sun.unsplash_02.screen.edit.EditActivity
-import com.sun.unsplash_02.utils.showAlertDialog
+import com.sun.unsplash_02.utils.extension.showAlertDialog
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 

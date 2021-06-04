@@ -2,10 +2,10 @@ package com.sun.unsplash_02.screen.detail
 
 import android.content.Context
 import com.sun.unsplash_02.data.model.Image
-import com.sun.unsplash_02.utils.DownloadImageTask
-import com.sun.unsplash_02.utils.LoadImageTask
-import com.sun.unsplash_02.utils.OnDownloadListener
 import com.sun.unsplash_02.utils.customview.ZoomImageView
+import com.sun.unsplash_02.utils.task.DownloadImageTask
+import com.sun.unsplash_02.utils.task.LoadImageTask
+import com.sun.unsplash_02.utils.task.OnDownloadListener
 
 class DetailPresenter : DetailContract.Presenter {
 
