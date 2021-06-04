@@ -14,13 +14,17 @@ class HomePresenter constructor(private val imageRepository: ImageRepository) :
     override fun loadListCollections() =
         imageRepository.getCollections(object : OnFetchDataJsonListener<MutableList<Collection>> {
             override fun onSuccess(data: MutableList<Collection>) {
-                view?.onCollectionLoaded(data)
-                view?.hideLoading()
+                view?.run {
+                    onCollectionLoaded(data)
+                    hideLoading()
+                }
             }
 
             override fun onError(exception: Exception?) {
-                view?.onError(exception)
-                view?.hideLoading()
+                view?.run {
+                    onError(exception)
+                    hideLoading()
+                }
             }
         })
 
@@ -35,24 +39,17 @@ class HomePresenter constructor(private val imageRepository: ImageRepository) :
             }
         }, ++currentPage)
 
-    override fun loadListImagesByCollection(collectionId: String) {
+    override fun loadListImagesByCollection(collectionId: String) =
         imageRepository.getImagesByCollection(object :
             OnFetchDataJsonListener<MutableList<Image?>> {
             override fun onSuccess(data: MutableList<Image?>) {
-                view?.run {
-                    hideLoading()
-                    onImageLoaded(data)
-                }
+                view?.onImageLoaded(data)
             }
 
             override fun onError(exception: Exception?) {
-                view?.run {
-                    hideLoading()
-                    onError(exception)
-                }
+                view?.onError(exception)
             }
-        }, collectionId, currentPage++)
-    }
+        }, collectionId, ++currentPage)
 
     override fun onStart() {
         view?.showLoading()

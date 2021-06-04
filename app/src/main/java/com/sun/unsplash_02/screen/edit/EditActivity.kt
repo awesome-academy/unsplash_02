@@ -11,7 +11,6 @@ import com.sun.unsplash_02.screen.edit.crop.CropFragment
 import com.sun.unsplash_02.screen.edit.draw.DrawFragment
 import com.sun.unsplash_02.screen.edit.emoji.EmojiFragment
 import com.sun.unsplash_02.screen.edit.filter.FilterFragment
-import com.sun.unsplash_02.utils.Constants
 import kotlinx.android.synthetic.main.activity_edit.*
 
 class EditActivity : BaseActivity() {

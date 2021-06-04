@@ -129,7 +129,6 @@ class HomeFragment : BaseFragment(), HomeContract.View {
             photoAdapter.stopLoadMore()
             isLoading = false
         }
-        showLoading()
         if (currentCollectionId != collection.id) {
             homePresenter.resetCurrentPage()
             recyclerPhoto.smoothScrollToPosition(0)

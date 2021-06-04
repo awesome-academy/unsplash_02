@@ -13,4 +13,9 @@
     <string name="draw">Draw</string>
     <string name="brightness">Brightness</string>
     <string name="icon">Icon</string>
+    <string name="want_to_download">Do you want to download this image?</string>
+    <string name="failed_create_media_record">Failed to create new MediaStore record.</string>
+    <string name="downloading_file">Downloading file. Please wait...</string>
+    <string name="failed_save_bitmap">Failed to save bitmap.</string>
+    <string name="failed_open_output_stream">Failed to open output stream.</string>
 </resources>

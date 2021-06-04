@@ -220,8 +220,7 @@ class ZoomImageView @JvmOverloads constructor(
                 origWidth * saveScale <= viewWidth
                         || origHeight * saveScale <= viewHeight -> {
                     matrixImage.postScale(
-                        scaleFactor, scaleFactor, 0f,
-                        0f
+                        scaleFactor, scaleFactor, 0f, 0f
                     )
                 }
                 else -> {

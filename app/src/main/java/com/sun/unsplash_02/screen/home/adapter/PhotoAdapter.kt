@@ -55,26 +55,20 @@ class PhotoAdapter(
         notifyDataSetChanged()
     }
 
-    fun getListPhotos() = listPhotos
-
     fun clear() {
         val oldListSize = itemCount
-        getListPhotos().clear()
+        listPhotos.clear()
         notifyItemRangeRemoved(0, oldListSize)
     }
 
     fun startLoadMore() {
-        if (itemCount > 0) {
-            listPhotos.add(null)
-            notifyItemInserted(itemCount - 1)
-        }
+        listPhotos.add(null)
+        notifyItemInserted(itemCount - 1)
     }
 
     fun stopLoadMore() {
-        if (itemCount > 0) {
-            listPhotos.removeAt(itemCount - 1)
-            notifyItemRemoved(itemCount)
-        }
+        listPhotos.removeAt(itemCount - 1)
+        notifyItemRemoved(itemCount)
     }
 
     class PhotoViewHolder(view: View, private val onRecyclerItemClickListener: ((Image) -> Unit)) :
