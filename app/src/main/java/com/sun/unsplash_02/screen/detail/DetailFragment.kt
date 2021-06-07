@@ -82,6 +82,13 @@ class DetailFragment : BaseFragment(), View.OnClickListener, DetailContract.View
                     }
                 }
                 R.id.imageDraw -> {
+                    imageData?.let {
+                        detailPresenter.downloadImage(
+                            requireContext(),
+                            it,
+                            TypeEdit.DRAW.value
+                        )
+                    }
                 }
                 R.id.imageBrightness -> {
                     imageData?.let {

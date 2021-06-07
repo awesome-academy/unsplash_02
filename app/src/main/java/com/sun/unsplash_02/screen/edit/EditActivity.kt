@@ -54,8 +54,8 @@ class EditActivity : BaseActivity() {
                 }
                 TypeEdit.DRAW.value -> {
                     toolbarEdit.title = getString(R.string.draw)
-                    imageUrl?.let {
-                        replaceFragment(DrawFragment.newInstance().also { fragment ->
+                    imageUrl?.let { imageUri ->
+                        replaceFragment(DrawFragment.newInstance(imageUri).also { fragment ->
                             completeEditListener = fragment
                         })
                     }
