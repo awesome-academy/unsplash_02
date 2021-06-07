@@ -29,7 +29,7 @@ class BrightnessFragment : BaseFragment(), SeekBar.OnSeekBarChangeListener, Comp
 
     override fun initData() {
         arguments?.let {
-            val imageUri = it.getString(EXTRA_IMAGE)
+            val imageUri = it.getString(ARGUMENT_IMAGE)
             imageBrightness.setImageURI(Uri.parse(imageUri))
             MediaStore.Images.Media.getBitmap(context?.contentResolver, Uri.parse(imageUri))
                 ?.let { bmp ->
@@ -70,10 +70,10 @@ class BrightnessFragment : BaseFragment(), SeekBar.OnSeekBarChangeListener, Comp
     }
 
     companion object {
-        private const val EXTRA_IMAGE = "EXTRA_IMAGE"
+        private const val ARGUMENT_IMAGE = "EXTRA_IMAGE"
 
         fun newInstance(imageUri: String) = BrightnessFragment().apply {
-            arguments = bundleOf(EXTRA_IMAGE to imageUri)
+            arguments = bundleOf(ARGUMENT_IMAGE to imageUri)
         }
     }
 }

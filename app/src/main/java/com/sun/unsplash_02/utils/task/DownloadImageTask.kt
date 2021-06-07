@@ -84,7 +84,7 @@ class DownloadImageTask constructor(context: Context, private val listener: OnDo
         super.onPostExecute(result)
         result?.let {
             listener.onComplete(it)
-        } ?: listener.onError(exception)
+        } ?: run { listener.onError(exception) }
     }
 
     companion object {

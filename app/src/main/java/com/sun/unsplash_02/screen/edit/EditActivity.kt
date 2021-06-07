@@ -62,8 +62,8 @@ class EditActivity : BaseActivity() {
                 }
                 TypeEdit.FILTER.value -> {
                     toolbarEdit.title = getString(R.string.filter)
-                    imageUrl?.let {
-                        replaceFragment(FilterFragment.newInstance().also { fragment ->
+                    imageUrl?.let { imageUri ->
+                        replaceFragment(FilterFragment.newInstance(imageUri).also { fragment ->
                             completeEditListener = fragment
                         })
                     }

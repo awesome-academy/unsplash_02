@@ -106,7 +106,7 @@ class SearchFragment : BaseFragment(), SearchContract.View {
         SearchPresenter(
             ImageRepository.getInstance(
                 ImageRemoteDataResource.getInstance(),
-                ImageLocalDataSource.getInstance(SearchHistoryPreference(requireContext()))
+                ImageLocalDataSource.getInstance(SearchHistoryPreference.getInstance(requireContext()))
             )
         ).run {
             setView(this@SearchFragment)

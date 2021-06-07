@@ -24,8 +24,8 @@ class DetailFragment : BaseFragment(), View.OnClickListener, DetailContract.View
     private lateinit var detailPresenter: DetailPresenter
     private var permissionLauncher: ActivityResultLauncher<Array<String>>? = null
     private var progressDialog: ProgressDialog? = null
-    private var readPermissionGranted = false
-    private var writePermissionGranted = false
+    private var isReadPermissionGranted = false
+    private var isWritePermissionGranted = false
     private var imageData: Image? = null
 
     override fun getLayoutResourceId() = R.layout.fragment_detail
@@ -58,10 +58,11 @@ class DetailFragment : BaseFragment(), View.OnClickListener, DetailContract.View
         }
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                readPermissionGranted =
-                    permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: readPermissionGranted
-                writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE]
-                    ?: writePermissionGranted
+                isReadPermissionGranted =
+                    permissions[Manifest.permission.READ_EXTERNAL_STORAGE]
+                        ?: isReadPermissionGranted
+                isWritePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE]
+                    ?: isWritePermissionGranted
             }
         updateOrRequestPermission()
     }
@@ -138,13 +139,13 @@ class DetailFragment : BaseFragment(), View.OnClickListener, DetailContract.View
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
         val minSdk29 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-        readPermissionGranted = hasReadPermission
-        writePermissionGranted = hasWritePermission || minSdk29
+        isReadPermissionGranted = hasReadPermission
+        isWritePermissionGranted = hasWritePermission || minSdk29
         val permissionsToRequest = mutableListOf<String>()
-        if (!readPermissionGranted) {
+        if (!isReadPermissionGranted) {
             permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        if (!writePermissionGranted) {
+        if (!isWritePermissionGranted) {
             permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
         if (permissionsToRequest.isNotEmpty()) {

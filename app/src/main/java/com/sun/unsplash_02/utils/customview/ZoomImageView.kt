@@ -122,7 +122,7 @@ class ZoomImageView @JvmOverloads constructor(
             saveScale = maxScale
             scaleFactor = maxScale / origScale
         }
-        matrixImage.postScale(scaleFactor, scaleFactor, 0f, 0f)
+        matrixImage.postScale(scaleFactor, scaleFactor, viewWidth / 2, viewHeight / 2)
         fixTrans()
         return false
     }
@@ -133,7 +133,7 @@ class ZoomImageView @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         viewWidth = MeasureSpec.getSize(widthMeasureSpec).toFloat()
         viewHeight = MeasureSpec.getSize(heightMeasureSpec).toFloat()
-        if (oldMeasureHeight == viewHeight || oldMeasureWidth == viewWidth
+        if (oldMeasureHeight == viewHeight && oldMeasureHeight == viewWidth
             || viewHeight == 0f || viewWidth == 0f
         ) return
         oldMeasureHeight = viewHeight
@@ -220,7 +220,7 @@ class ZoomImageView @JvmOverloads constructor(
                 origWidth * saveScale <= viewWidth
                         || origHeight * saveScale <= viewHeight -> {
                     matrixImage.postScale(
-                        scaleFactor, scaleFactor, 0f, 0f
+                        scaleFactor, scaleFactor, viewWidth / 2, viewHeight / 2
                     )
                 }
                 else -> {
